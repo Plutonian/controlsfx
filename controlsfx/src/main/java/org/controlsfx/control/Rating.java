@@ -33,8 +33,6 @@ import javafx.scene.control.Skin;
 
 /**
  * A control for allowing users to provide a rating. This control supports
- * {@link #partialRatingProperty() partial ratings} (i.e. not whole numbers and
- * dependent upon where the user clicks in the control) and
  * {@link #updateOnHoverProperty() updating the rating on hover}. Read on for
  * more examples!
  *
@@ -75,30 +73,7 @@ import javafx.scene.control.Skin;
  * for 'integer' ratings: it also allows for the user to click anywhere within
  * the rating area to set a 'float' rating. This is hard to describe, but easy
  * to show in a picture:
- *
- * <br>
- * <center>
- * <img src="rating-partial.png" alt="Screenshot of partial Rating">
- * </center>
- *
- * <p>In essence, in the screenshot above, the user clicked roughly in the
- * middle of the third star. This results in a rating of approximately 2.44.
- * To enable {@link #partialRatingProperty() partial ratings}, simply do the
- * following when instantiating the Rating control:
- *
- * <pre>
- * {@code
- * final Rating rating = new Rating();
- * rating.setPartialRating(true);}</pre>
- *
- * <p>So far all of the Rating controls demonstrated above have
- * required the user to click on the stars to register their rating. This may not
- * be the preferred user interaction - often times the preferred approach is to
- * simply allow for the rating to be registered by the user hovering their mouse
- * over the rating stars. This mode is also supported by the Rating control,
- * using the {@link #updateOnHoverProperty() update on hover} property, as such:
- *
- * <pre>
+ * <p>
  * {@code
  * final Rating rating = new Rating();
  * rating.setUpdateOnHover(true);}</pre>
@@ -147,7 +122,7 @@ public class Rating extends ControlsFXControl {
         getStyleClass().setAll("rating"); //$NON-NLS-1$
 
         setMax(max);
-        setRating(rating == DEFAULT_RATING_VALUE ? (int) Math.floor(max / 2.0) : rating);
+        setRating(rating);
     }
 
 
@@ -184,26 +159,26 @@ public class Rating extends ControlsFXControl {
     /**
      * The current rating value.
      */
-    public final DoubleProperty ratingProperty() {
+    public final IntegerProperty ratingProperty() {
         if (rating == null) {
-            rating = new SimpleDoubleProperty(this, "rating", DEFAULT_RATING_VALUE); //$NON-NLS-1$
+            rating = new SimpleIntegerProperty(this, "rating", DEFAULT_RATING_VALUE); //$NON-NLS-1$
         }
         return rating;
     }
 
-    private DoubleProperty rating;
+    private IntegerProperty rating;
 
     /**
      * Sets the current rating value.
      */
-    public final void setRating(double value) {
+    public final void setRating(int value) {
         ratingProperty().set(value);
     }
 
     /**
      * Returns the current rating value.
      */
-    public final double getRating() {
+    public final int getRating() {
         return rating == null ? DEFAULT_RATING_VALUE : rating.get();
     }
 
@@ -267,41 +242,6 @@ public class Rating extends ControlsFXControl {
      */
     public final Orientation getOrientation() {
         return orientation == null ? Orientation.HORIZONTAL : orientation.get();
-    }
-
-
-    // --- partial rating
-
-    /**
-     * If true this allows for users to set a rating as a floating point value.
-     * In other words, the range of the rating 'stars' can be thought of as a
-     * range between [0, max], and whereever the user clicks will be calculated
-     * as the new rating value. If this is false the more typical approach is used
-     * where the selected 'star' is used as the rating.
-     */
-    public final BooleanProperty partialRatingProperty() {
-        if (partialRating == null) {
-            partialRating = new SimpleBooleanProperty(this, "partialRating", false); //$NON-NLS-1$
-        }
-        return partialRating;
-    }
-
-    private BooleanProperty partialRating;
-
-    /**
-     * Sets whether {@link #partialRatingProperty() partial rating} support is
-     * enabled or not.
-     */
-    public final void setPartialRating(boolean value) {
-        partialRatingProperty().set(value);
-    }
-
-    /**
-     * Returns whether {@link #partialRatingProperty() partial rating} support is
-     * enabled or not.
-     */
-    public final boolean isPartialRating() {
-        return partialRating != null && partialRating.get();
     }
 
 
