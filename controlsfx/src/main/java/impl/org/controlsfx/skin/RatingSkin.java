@@ -66,15 +66,6 @@ public class RatingSkin extends SkinBase<Rating> {
     private Pane backgroundContainer;
 
     private int rating = -1;
-
-    private void updateRatingFromMouseEvent(MouseEvent event) {
-        Rating control = getSkinnable();
-        if (!control.ratingProperty().isBound()) {
-            Point2D mouseLocation = new Point2D(event.getSceneX(), event.getSceneY());
-            control.setRating(calculateRating(mouseLocation));
-        }
-    }
-
     private EventHandler<MouseEvent> eventHandler;
 
     /***************************************************************************
@@ -107,6 +98,13 @@ public class RatingSkin extends SkinBase<Rating> {
         });
     }
 
+    private void updateRatingFromMouseEvent(MouseEvent event) {
+        Rating control = getSkinnable();
+        if (!control.ratingProperty().isBound()) {
+            Point2D mouseLocation = new Point2D(event.getSceneX(), event.getSceneY());
+            control.setRating(calculateRating(mouseLocation));
+        }
+    }
 
     /***************************************************************************
      *
