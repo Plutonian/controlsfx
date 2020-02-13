@@ -26,6 +26,7 @@
  */
 package impl.org.controlsfx.skin;
 
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
@@ -93,13 +94,13 @@ public class RatingSkin extends SkinBase<Rating> {
         this.updateOnHover = control.isUpdateOnHover();
 
         // init
-        recreateAll();
+        reCreateAll();
         updateRating();
         // -- end init
 
         registerChangeListener(control.ratingProperty(), e -> updateRating());
-        registerChangeListener(control.maxProperty(), e -> recreateAll());
-        registerChangeListener(control.orientationProperty(), e -> recreateAll());
+        registerChangeListener(control.maxProperty(), e -> reCreateAll());
+        registerChangeListener(control.orientationProperty(), e -> reCreateAll());
         registerChangeListener(control.updateOnHoverProperty(), e -> {
             this.updateOnHover = getSkinnable().isUpdateOnHover();
             updateEventHandler();
@@ -120,19 +121,19 @@ public class RatingSkin extends SkinBase<Rating> {
         getChildren().setAll(backgroundContainer);
     }
 
-    private void recreateAll() {
-        recreateButtons();
+    private void reCreateAll() {
+        reCreateStars();
         updateEventHandler();
     }
 
 
-    private void recreateButtons() {
+    private void reCreateStars() {
         createContainer();
 
         final Rating control = getSkinnable();
 
         List<Node> nodes = IntStream.rangeClosed(1, control.getMax())
-                .mapToObj(i -> createBackButton()).collect(Collectors.toList());
+                .mapToObj(i -> createStar()).collect(Collectors.toList());
 
         backgroundContainer.getChildren().setAll(nodes);
 
@@ -187,7 +188,7 @@ public class RatingSkin extends SkinBase<Rating> {
 //                ((VBox)backgroundContainer).getSpacing();
 //    }
 
-    private Node createBackButton() {
+    private Node createStar() {
         Node btn = new Region();
         btn.getStyleClass().add("button"); //$NON-NLS-1$
         return btn;
@@ -208,23 +209,23 @@ public class RatingSkin extends SkinBase<Rating> {
     private void updateButtonStyles() {
         final int max = getSkinnable().getMax();
 
-        // make a copy of the buttons list so that we can reverse the order if
-        // the list is vertical (as the buttons are ordered bottom to top).
-        final List<Node> buttons = new ArrayList<>(backgroundContainer.getChildren());
+        // make a copy of the stars list so that we can reverse the order if
+        // the list is vertical (as the stars are ordered bottom to top).
+        final List<Node> stars = new ArrayList<>(backgroundContainer.getChildren());
         if (isVertical()) {
-            Collections.reverse(buttons);
+            Collections.reverse(stars);
         }
 
         IntStream.range(0, max).forEach(i -> {
-            Node button = buttons.get(i);
+            Node star = stars.get(i);
 
-            final List<String> styleClass = button.getStyleClass();
+            final ObservableList<String> styleClass = star.getStyleClass();
             final boolean containsStrong = styleClass.contains(STRONG);
             if (i < rating) {
                 if (!containsStrong) {
                     styleClass.add(STRONG);
                 }
-            } else if (containsStrong) {
+            } else {
                 styleClass.remove(STRONG);
             }
         });
